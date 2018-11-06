@@ -1,7 +1,22 @@
 const express = require('express')
+const logger = require('morgan')
+const bodyParser = require('body-parser')
+
+// setup the express app
 const app = express()
+
+//set up the port to listen from
 const port = 3000
 
-app.get('/', (req,res)=>res.send("hello world"))
+// log requests to the console
+app.use(logger('dev'))
 
-app.listen(port, ()=> console.log(`listening on port ${port}`))
+// parse incoming request data
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
+
+// set up catch all endpoint
+app.get('*', (req,res) => res.status(200).send({
+    message:'Welcome to carpool'
+}))
+app.listen(port, ()=> console.log(`listening to port ${port}`))

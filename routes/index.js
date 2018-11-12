@@ -5,6 +5,7 @@ module.exports =(app)=>{
         message:'Welcome to carpool backend'
     }));
 
+    
     app.post('/api/v1/user', UserController.make);
     app.get('/api/v1/user', UserController.show);
 }

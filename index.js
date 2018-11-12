@@ -15,8 +15,11 @@ app.use(logger('dev'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 
+require('./routes/index')(app);
 // set up catch all endpoint
 app.get('*', (req,res) => res.status(200).send({
     message:'Welcome to carpool'
 }))
 app.listen(port, ()=> console.log(`listening to port ${port}`))
+
+module.exports = app;

@@ -1,7 +1,7 @@
-import User from '../../models/user';
+const User = require('../../models').User
 
 module.exports = {
-    create(req,res){
+    make(req,res){
         return User
             .create({
                 name: req.body.name,
@@ -13,5 +13,18 @@ module.exports = {
             .catch(
                 error => res.status(400).send(error)
             )
+    },
+
+    
+    show(req,res){
+        return User
+            .all()
+            .then(
+                user => res.status(200).send(user)
+            )
+            .catch(
+                error => res.status(400).send(error)
+            )
+
     }
 }

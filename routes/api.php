@@ -30,9 +30,6 @@ Route::group(['prefix' => 'v1'], function(){
     Route::post('user/signin', [
         'uses' => 'AuthController@signin'
     ]);
-    Route::get('user/signin', [
-        'uses' => 'AuthController@see'
-    ]);
     
 });
 

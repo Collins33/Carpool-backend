@@ -41,7 +41,10 @@ class MeetingController extends Controller
     public function store(Request $request)
     {
         //
-        return "it works";
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $time = $request->input('time');
+        $user_it = $request->input('user_id');
     }
 
     /**
@@ -78,6 +81,10 @@ class MeetingController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $time = $request->input('time');
+        $user_it = $request->input('user_id');
         return "it works";
     }
 

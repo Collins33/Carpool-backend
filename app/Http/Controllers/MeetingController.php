@@ -17,21 +17,32 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        //
-        return "it works";
-    }
+        // returns a list of meetings
+        $title = 'new';
+        $description = 'should have been an email';
+        $time = '1-12-21';
+        $user_id = '12';
+        $meeting = [
+            'title' => $title,
+            'description' => $description,
+            'time' => $time,
+            'user_id' => $user_id,
+            'view_meeting' => [
+                'href' => 'api/v1/meeting/1',
+                'method' => 'GET'
+            ]
+        ];
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-        return "it works";
+        $response = [
+            'message'=>'List of meetings',
+            'meeting' => [
+                $meeting,
+                $meeting
+            ]
+        ];
+        return response()->json($response, 200);
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -40,11 +51,34 @@ class MeetingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //validation
+        $this->validate($request,[
+            'title'=> 'required',
+            'description' => 'required',
+            'time' => 'required',
+            'user_id'=>'required'
+        ]);
+        
         $title = $request->input('title');
         $description = $request->input('description');
         $time = $request->input('time');
-        $user_it = $request->input('user_id');
+        $user_id = $request->input('user_id');
+        $meeting = [
+            'title' => $title,
+            'description' => $description,
+            'time' => $time,
+            'user_id' => $user_id,
+            'view_meeting' => [
+                'href' => 'api/v1/meeting/1',
+                'method' => 'GET'
+            ]
+        ];
+
+        $response = [
+            'message'=>'Meeting created successfully',
+            'meeting' => $meeting
+        ];
+        return response()->json($response, 201);
     }
 
     /**

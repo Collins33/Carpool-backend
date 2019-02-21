@@ -12,7 +12,7 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
-     *
+     * They are passed to the constructor when initializing the object
      * @var array
      */
     protected $fillable = [
@@ -27,4 +27,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // create relationship with meeting model
+    public function meetings(){
+        return $this->belongsToMany('App\Meeting');
+    }
 }

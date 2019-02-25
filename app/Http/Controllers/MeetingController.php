@@ -120,16 +120,58 @@ class MeetingController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response 
      */
     public function update(Request $request, $id)
     {
-        //
+        //validation
+        $this->validate($request,[
+            'title'=> 'required',
+            'description' => 'required',
+            'time' => 'required|date_format:YmdHie',
+            'user_id'=>'required'
+        ]);
+
         $title = $request->input('title');
         $description = $request->input('description');
         $time = $request->input('time');
-        $user_it = $request->input('user_id');
-        return "it works";
+        $user_id = $request->input('user_id');
+        $meeting = [
+            'title'=> $title,
+            'description'=>$description,
+            'time'=>$time,
+            'user_id'=>$user_id,
+            'view_meeting'=>[
+                'href'=> 'api/v1/meeting/1',
+                'method'=> 'GET'
+            ]
+        ];
+        // check if the meeting exists
+        $meeting = Meeting::with('users')->findOrFail($id);
+        // check if the user id is registered for the meeting
+        if(!$meeting->users()->where('users.id', $user_id)->first()){
+            return response()->json([
+                'msg'=>'user not registered for the meeting'
+            ], 401);
+        };
+        $meeting->time = Carbon::createFromFormat('YmdHie', $time);
+        $meeting->title = $title;
+        $meeting->description = $description;
+        // check if update fails
+        if(!$meeting->update()){
+            return response()->json(['msg'=>'error during updating'], 404);
+        }
+        $meeting->view_meeting =[
+            'href'=>'api/v1/meeting' . $meeting->id,
+            'method'=>'GET'
+        ];
+        $response = [
+            'msg'=>'Meeting updated',
+            'meeting'=> $meeting
+        ];
+        return response()->json($response, 200);
+
+            
     }
 
     /**
@@ -140,7 +182,22 @@ class MeetingController extends Controller
      */
     public function destroy($id)
     {
-        //
-        return "it works";
+       // check if the meeting exists
+       $meeting = Meeting::findOrFail($id);
+       // fetch all users attatched to that meeting
+       $users = $meeting->users;
+       // detatch all users
+       $meeting->users()->detach();
+       // if deleting fails, reattatch the users
+       if(!$meeting->delete()){
+           foreach($users as $user){
+               $meeting->users()->attach($user);
+           };
+           return response()->json(['msg'=>'deletion failed'], 404);
+       };
+       $response = [
+           'msg'=>'Message deleted'
+       ];
+       return response()->json($response, 200);
     }
 }

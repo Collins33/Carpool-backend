@@ -8,6 +8,12 @@ use App\User;
 
 class RegistrationController extends Controller
 {
+
+    public function __construct(){
+        // add middleware to protect certain actions
+        // include the actions to be protected
+        $this->middleware('jwt.auth');
+    }
     /**
      * Display a listing of the resource.
      *
